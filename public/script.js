@@ -49,7 +49,7 @@ function novoCliente() {
 }
 
 function abrirCliente(id) {
-  alert("Abrir cliente ID: " + id);
+  window.location.href = `cliente.html?id=${id}`;
 }
 
 // iniciar

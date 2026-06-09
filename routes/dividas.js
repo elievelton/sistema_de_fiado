@@ -26,4 +26,18 @@ router.get("/:cliente_id", (req, res) => {
   );
 });
 
+// Atualizar status da dívida
+router.put("/:id/status", (req, res) => {
+  const { status } = req.body;
+
+  db.run(
+    "UPDATE dividas SET status = ? WHERE id = ?",
+    [status, req.params.id],
+    function (err) {
+      if (err) return res.send(err);
+      res.send({ success: true });
+    }
+  );
+});
+
 module.exports = router;
