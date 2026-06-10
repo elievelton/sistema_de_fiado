@@ -1,83 +1,342 @@
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f5f7fa;
-  padding: 20px;
-}
-
-h1 {
-  margin-bottom: 20px;
-}
-
-ul {
-  list-style: none;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto;
+  background-color: #f5f6fa;
+  margin: 0;
   padding: 0;
 }
 
-li {
+/* Container */
+
+.container {
+  width: 100%;
+  max-width: 420px;
+  margin: auto;
+  padding: 20px;
+}
+
+/* telas maiores (tablet / desktop) */
+@media (min-width: 768px) {
+  .container {
+    max-width: 700px;
+  }
+}
+
+/* telas grandes */
+@media (min-width: 1024px) {
+  .container {
+    max-width: 900px;
+  }
+}
+
+@media (min-width: 768px) {
+  #listaClientes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+  }
+}
+
+
+/* Título */
+h1 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+/* Card estilo Nubank */
+.card {
   background: white;
-  padding: 15px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  padding: 16px;
+  margin-bottom: 12px;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  transition: transform 0.1s ease;
+}
+
+.card:hover {
+  transform: scale(1.01);
+}
+
+/* Nome cliente */
+.card strong {
   font-size: 16px;
 }
 
-/* status */
-
-.ativa {
-  border-left: 5px solid red;
-}
-
-.quitada {
-  border-left: 5px solid green;
-}
-
-.pagamento {
-  border-left: 5px solid blue;
-}
-
-#dashboard {
-  background: white;
-  padding: 15px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-#dashboard p {
-  margin: 5px 0;
+/* Saldo */
+.saldo {
+  font-size: 18px;
   font-weight: bold;
+  margin-top: 5px;
 }
+
+/* Status */
+.devedor {
+  color: #e53935;
+}
+
+.quitado {
+  color: #43a047;
+}
+
+/* Input estilo app */
 input {
-  padding: 8px;
-  margin: 5px 0;
-  width: 200px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background-color: #f0f2f5;
+  margin-top: 10px;
+  font-size: 14px;
 }
+
+/* Botão moderno */
 
 button {
-  padding: 8px 12px;
-  margin-left: 5px;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background-color: #6a1b9a;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
   cursor: pointer;
 }
-.card {
-  background: white;
-  padding: 15px;
-  margin-bottom: 20px;
+
+
+button:hover {
+  opacity: 0.9;
+}
+.btn-principal {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.btn-principal:hover {
+  opacity: 0.9;
+}
+
+.busca-container + button {
+  display: block;
+}
+
+
+/* Dashboard */
+#dashboard p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #444;
+}
+
+/* botão pequeno (extrato) */
+.botao-detalhe {
+  width: auto;
+  padding: 6px 10px;
+  font-size: 12px;
+  background: #eee;
+  color: #333;
   border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  margin-top: 8px;
 }
 
-.ativa {
-  border-left: 5px solid red;
-  color: red;
+
+.detalhes {
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+/* dashboard moderno */
+
+.dashboard-card {
+  background: white;
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
 }
 
-.quitada {
-  border-left: 5px solid green;
-  color: green;
+
+/* cores específicas */
+.receber {
+  border-left: 5px solid #e53935;
 }
 
-.pagamento {
-  margin-left: 15px;
-  color: #555;
+.recebido {
+  border-left: 5px solid #1e88e5;
+}
+
+.total {
+  border-left: 5px solid #43a047;
+}
+
+.clientes {
+  border-left: 5px solid #8e24aa;
+}
+
+
+#busca {
+  width: 100%;
+  padding: 14px;
+  padding-right: 40px;
+  border-radius: 12px;
+  border: none;
+  background: #f0f2f5;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+
+#busca::placeholder {
+  color: #888;
+}
+
+.devedor-card {
+  background: #fdecea;
+}
+
+.quitado-card {
+  background: #e8f5e9;
+}
+
+
+.highlight {
+  background-color: #ffeb3b88;
+  border-radius: 4px;
+  padding: 2px;
+}
+
+.busca-container {
+  position: relative;
+  width: 100%;
+}
+
+/* input */
+
+#busca {
+  width: 100%;
+  padding: 14px;
+  padding-right: 40px; /* espaço maior pro botão */
+  border-radius: 12px;
+  border: none;
+  background: #f0f2f5;
+  font-size: 14px;
+  box-sizing: border-box; /* IMPORTANTE ✅ */
+}
+
+
+/* botão X */
+#limparBusca {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  
+  font-size: 14px;
+  cursor: pointer;
+  color: #888;
+
+  display: none;
+}
+
+#limparBusca:hover {
+  color: #000;
+}
+
+/* GRID dashboard */
+.grid-dashboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+/* cards maiores */
+.dashboard-card {
+  background: white;
+  padding: 14px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.top-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.top-bar input {
+  flex: 1;
+}
+
+.top-bar button {
+  width: auto;
+  padding: 10px 15px;
+  background-color: #6a1b9a;
+}
+
+#listaClientes {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+@media (min-width: 768px) {
+  #listaClientes {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 1024px) {
+  #listaClientes {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .grid-dashboard {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .busca-container {
+    max-width: 500px;
+  }
+}
+/* botão flutuante estilo app */
+.fab {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+
+  width: 60px;
+  height: 60px;
+
+  border-radius: 50%;
+  border: none;
+
+  background-color: #6a1b9a;
+  color: white;
+
+  font-size: 28px;
+  font-weight: bold;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+
+  z-index: 1000;
+}
+
+/* efeito ao passar mouse */
+.fab:hover {
+  transform: scale(1.05);
+}
+
+/* efeito clique */
+.fab:active {
+  transform: scale(0.95);
 }

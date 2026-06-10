@@ -3,31 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <title>Cliente</title>
- <!-- CSS -->
+
+  <!-- CSS -->
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
+<div class="container">
+
 <h1 id="nomeCliente">Cliente</h1>
 
-<p id="saldo">Saldo: R$ 0</p>
+<!-- Saldo -->
+<div class="card">
+  <h2 id="saldo" class="saldo"></h2>
+</div>
 
-<h3>🧾 Nova Dívida</h3>
+<!-- Nova Dívida -->
+<div class="card">
+  <h3>🧾 Nova Dívida</h3>
 
-<input type="number" id="valorDivida" placeholder="Valor da dívida">
-<button onclick="novaDivida()">Salvar</button>
+  <input type="number" id="valorDivida" placeholder="Valor da dívida">
+  <button onclick="novaDivida()">Salvar</button>
+</div>
 
-<h3>💸 Registrar Pagamento</h3>
+<!-- Pagamento -->
+<div class="card">
+  <h3>💸 Registrar Pagamento</h3>
 
-<input type="number" id="valorPagamento" placeholder="Valor do pagamento">
-<button onclick="novoPagamento()">Registrar</button>
+  <input type="number" id="valorPagamento" placeholder="Valor do pagamento">
+  <button onclick="novoPagamento()">Registrar</button>
+</div>
 
+<!-- Ações -->
+<div class="card">
+  <button onclick="verDividas()">🧾 Ver dívidas</button>
+  <button onclick="abrirExtrato()">📊 Ver extrato</button>
+</div>
 
-<hr>
-
-<button onclick="verDividas()">Ver dívidas</button>
-<button onclick="abrirExtrato()">Ver extrato</button>
+</div>
 
 <script src="cliente.js"></script>
 

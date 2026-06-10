@@ -7,33 +7,33 @@ async function carregarExtrato() {
   const resDividas = await fetch(`http://localhost:3000/dividas/${id}`);
   const dividas = await resDividas.json();
 
-  let extrato = [];
+  let listaDados = [];
 
   for (let divida of dividas) {
-    extrato.push({
+    // adicionar dívida
+    listaDados.push({
       tipo: "divida",
       id: divida.id,
       valor: divida.valor,
-      data: divida.data,
+      data: divida.data
     });
 
+    // buscar pagamentos
     const resPag = await fetch(`http://localhost:3000/pagamentos/${divida.id}`);
     const pagamentos = await resPag.json();
 
     for (let p of pagamentos) {
-      extrato.push({
+      listaDados.push({
         tipo: "pagamento",
         divida_id: divida.id,
         valor: p.valor,
         data: p.data,
-        metodo: p.metodo,
+        metodo: p.metodo
       });
     }
   }
 
-  extrato.sort((a, b) => new Date(a.data) - new Date(b.data));
-
-  mostrarExtrato(extrato);
+  mostrarExtrato(listaDados);
 }
 
 function mostrarExtrato(listaDados) {
@@ -41,37 +41,37 @@ function mostrarExtrato(listaDados) {
 
   let grupos = [];
 
-  // separar dívidas
-  listaDados.forEach((item) => {
+  // 1. criar grupos de dívida
+  listaDados.forEach(item => {
     if (item.tipo === "divida") {
       grupos.push({
         id: item.id,
         valor: item.valor,
         data: item.data,
         pagamentos: [],
-        saldo: item.valor,
+        saldo: item.valor
       });
     }
   });
 
-  // ordenar dívidas por data (mais antiga)
+  // ordenar dívidas mais antigas primeiro
   grupos.sort((a, b) => new Date(a.data) - new Date(b.data));
 
-  // aplicar pagamentos FIFO
-  listaDados.forEach((item) => {
+  // 2. aplicar pagamentos (FIFO)
+  listaDados.forEach(item => {
     if (item.tipo === "pagamento") {
       let restante = item.valor;
 
       for (let grupo of grupos) {
         if (restante <= 0) break;
 
-        if (Math.abs(grupo.saldo) > 0.01) {
+        if (grupo.saldo > 0) {
           let aplicado = Math.min(grupo.saldo, restante);
 
           grupo.pagamentos.push({
             valor: aplicado,
             data: item.data,
-            metodo: item.metodo,
+            metodo: item.metodo
           });
 
           grupo.saldo -= aplicado;
@@ -81,12 +81,12 @@ function mostrarExtrato(listaDados) {
     }
   });
 
-  // inverter ordem para exibir recente primeiro
+  // inverter para mostrar mais recente primeiro
   grupos.reverse();
 
-  // renderizar
-  grupos.forEach((grupo) => {
-    // CARD PRINCIPAL
+  // 3. renderizar
+  grupos.forEach(grupo => {
+
     const card = document.createElement("div");
     card.classList.add("card");
 
@@ -94,28 +94,68 @@ function mostrarExtrato(listaDados) {
     titulo.style.fontWeight = "bold";
     titulo.style.marginBottom = "8px";
 
-    if (grupo.saldo <= 0) {
+    if (Math.abs(grupo.saldo) < 0.01) {
       card.classList.add("quitada");
       titulo.innerText = `🧾 Dívida - R$ ${grupo.valor} - ${grupo.data} → ✅ Quitada`;
     } else {
       card.classList.add("ativa");
-      titulo.innerText = `🧾 Dívida - R$ ${grupo.valor} - ${grupo.data} → 🔴 Deve: R$ ${grupo.saldo}`;
+      titulo.innerText = `🧾 Dívida - R$ ${grupo.valor} - ${grupo.data} → 🔴 Deve: R$ ${grupo.saldo.toFixed(2)}`;
     }
 
     card.appendChild(titulo);
 
-    // LINHAS DE PAGAMENTO
-    grupo.pagamentos.forEach((p) => {
-      const pEl = document.createElement("div");
-      pEl.classList.add("pagamento");
+    // caso não tenha pagamento
+    if (grupo.pagamentos.length === 0) {
+      const info = document.createElement("div");
+      info.style.color = "#999";
+      info.innerText = "Nenhum pagamento registrado";
+      card.appendChild(info);
+    }
 
-      pEl.innerText = `💸 Pago: R$ ${p.valor} (${p.metodo}) - ${p.data}`;
+// botão expandir (só se tiver pagamentos)
+if (grupo.pagamentos.length > 0) {
 
-      card.appendChild(pEl);
-    });
+  // criar botão
+  const botao = document.createElement("button");
+  botao.classList.add("botao-detalhe");
+  botao.innerText = "▼ Ver detalhes";
 
-    lista.appendChild(card);
+  // criar container de detalhes
+  const detalhes = document.createElement("div");
+  detalhes.classList.add("detalhes");
+  detalhes.style.maxHeight = "0px"; // inicia fechado
+
+  // evento de clique
+  botao.onclick = () => {
+    if (detalhes.style.maxHeight !== "0px") {
+      detalhes.style.maxHeight = "0px";
+      botao.innerText = "▼ Ver detalhes";
+    } else {
+      detalhes.style.maxHeight = detalhes.scrollHeight + "px";
+      botao.innerText = "▲ Ocultar";
+    }
+  };
+
+  // adicionar botão no card
+  card.appendChild(botao);
+
+  // adicionar pagamentos dentro do container
+  grupo.pagamentos.forEach(p => {
+    const pEl = document.createElement("div");
+    pEl.classList.add("pagamento");
+
+    pEl.innerText = `💸 Pago: R$ ${p.valor} (${p.metodo || "manual"}) - ${p.data}`;
+
+    detalhes.appendChild(pEl);
   });
+
+  // adicionar detalhes no card
+  card.appendChild(detalhes);
 }
 
+    lista.appendChild(card);
+});
+}
+
+// iniciar
 carregarExtrato();

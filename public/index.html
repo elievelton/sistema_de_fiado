@@ -3,14 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>Sistema Fiado</title>
-  <div id="dashboard">
-  <p>💰 A receber: <span id="totalReceber">R$ 0</span></p>
-  <p>💸 Recebido no mês: <span id="recebidoMes">R$ 0</span></p>
-  <p>📈 Recebido total: <span id="recebidoTotal">R$ 0</span></p>
-  <p>👥 Clientes: <span id="totalClientes">0</span></p>
-</div>
-
-<hr>
 
   <!-- CSS -->
   <link rel="stylesheet" href="style.css">
@@ -18,13 +10,51 @@
 
 <body>
 
+
+<div class="container">
+
 <h1>📊 Sistema de Fiado</h1>
 
-<input type="text" id="busca" placeholder="Buscar cliente...">
+<!-- DASHBOARD -->
+<div id="dashboard" class="grid-dashboard">
 
-<button onclick="novoCliente()">+ Novo Cliente</button>
+  <div class="dashboard-card receber">
+    <span>💰 A receber</span>
+    <span id="totalReceber">R$ 0</span>
+  </div>
 
-<ul id="listaClientes"></ul>
+  <div class="dashboard-card recebido">
+    <span>💸 Recebido no mês</span>
+    <span id="recebidoMes">R$ 0</span>
+  </div>
+
+  <div class="dashboard-card total">
+    <span>📈 Recebido total</span>
+    <span id="recebidoTotal">R$ 0</span>
+  </div>
+
+  <div class="dashboard-card clientes">
+    <span>👥 Clientes</span>
+    <span id="totalClientes">0</span>
+  </div>
+
+</div>
+
+
+<!-- BUSCA -->
+<div class="busca-container">
+  <input type="text" id="busca" placeholder="🔍 Buscar cliente...">
+  <span id="limparBusca">✖</span>
+</div>
+
+<!-- BOTÃO -->
+<button class="fab" onclick="novoCliente()">+</button>
+
+
+<!-- LISTA -->
+<div id="listaClientes"></div>
+
+</div>
 
 <!-- JS -->
 <script src="script.js"></script>
