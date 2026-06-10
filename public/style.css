@@ -1,5 +1,6 @@
 body {
-  font-family: Arial;
+  font-family: Arial, sans-serif;
+  background-color: #f5f7fa;
   padding: 20px;
 }
 
@@ -7,18 +8,76 @@ h1 {
   margin-bottom: 20px;
 }
 
-input {
-  padding: 10px;
-  width: 250px;
-  margin-bottom: 10px;
-}
-
-button {
-  padding: 10px;
-  margin-left: 5px;
+ul {
+  list-style: none;
+  padding: 0;
 }
 
 li {
-  margin: 10px 0;
+  background: white;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  font-size: 16px;
+}
+
+/* status */
+
+.ativa {
+  border-left: 5px solid red;
+}
+
+.quitada {
+  border-left: 5px solid green;
+}
+
+.pagamento {
+  border-left: 5px solid blue;
+}
+
+#dashboard {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+#dashboard p {
+  margin: 5px 0;
+  font-weight: bold;
+}
+input {
+  padding: 8px;
+  margin: 5px 0;
+  width: 200px;
+}
+
+button {
+  padding: 8px 12px;
+  margin-left: 5px;
   cursor: pointer;
+}
+.card {
+  background: white;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.ativa {
+  border-left: 5px solid red;
+  color: red;
+}
+
+.quitada {
+  border-left: 5px solid green;
+  color: green;
+}
+
+.pagamento {
+  margin-left: 15px;
+  color: #555;
 }

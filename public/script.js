@@ -54,3 +54,50 @@ function abrirCliente(id) {
 
 // iniciar
 carregarClientes();
+carregarDashboard();
+async function carregarDashboard() {
+  const resClientes = await fetch("http://localhost:3000/clientes");
+  const clientes = await resClientes.json();
+
+  let totalReceber = 0;
+  let recebidoTotal = 0;
+  let recebidoMes = 0;
+
+  const hoje = new Date();
+  const mesAtual = hoje.getMonth();
+  const anoAtual = hoje.getFullYear();
+
+  for (let cliente of clientes) {
+	const resDividas = await fetch(`http://localhost:3000/dividas/${cliente.id}`);
+	const dividas = await resDividas.json();
+
+	for (let divida of dividas) {
+  	totalReceber += divida.valor;
+
+  	const resPag = await fetch(`http://localhost:3000/pagamentos/${divida.id}`);
+  	const pagamentos = await resPag.json();
+
+  	for (let p of pagamentos) {
+    	recebidoTotal += p.valor;
+
+    	const dataPag = new Date(p.data);
+
+    	if (
+      	dataPag.getMonth() === mesAtual &&
+      	dataPag.getFullYear() === anoAtual
+    	) {
+      	recebidoMes += p.valor;
+    	}
+  	}
+	}
+  }
+
+  // saldo real (receber - pago)
+  totalReceber = totalReceber - recebidoTotal;
+
+  // atualizar tela
+  document.getElementById("totalReceber").innerText = `R$ ${totalReceber.toFixed(2)}`;
+  document.getElementById("recebidoTotal").innerText = `R$ ${recebidoTotal.toFixed(2)}`;
+  document.getElementById("recebidoMes").innerText = `R$ ${recebidoMes.toFixed(2)}`;
+  document.getElementById("totalClientes").innerText = clientes.length;
+}

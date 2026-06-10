@@ -12,8 +12,9 @@ async function carregarExtrato() {
   for (let divida of dividas) {
     extrato.push({
       tipo: "divida",
+      id: divida.id,
       valor: divida.valor,
-      data: divida.data
+      data: divida.data,
     });
 
     const resPag = await fetch(`http://localhost:3000/pagamentos/${divida.id}`);
@@ -22,14 +23,15 @@ async function carregarExtrato() {
     for (let p of pagamentos) {
       extrato.push({
         tipo: "pagamento",
+        divida_id: divida.id,
         valor: p.valor,
         data: p.data,
-        metodo: p.metodo
+        metodo: p.metodo,
       });
     }
   }
 
-  extrato.sort((a, b) => new Date(b.data) - new Date(a.data));
+  extrato.sort((a, b) => new Date(a.data) - new Date(b.data));
 
   mostrarExtrato(extrato);
 }
@@ -37,17 +39,83 @@ async function carregarExtrato() {
 function mostrarExtrato(listaDados) {
   lista.innerHTML = "";
 
-  for (let item of listaDados) {
-    const li = document.createElement("li");
+  let grupos = [];
 
+  // separar dívidas
+  listaDados.forEach((item) => {
     if (item.tipo === "divida") {
-      li.innerText = `🧾 Dívida - R$ ${item.valor} - ${item.data}`;
+      grupos.push({
+        id: item.id,
+        valor: item.valor,
+        data: item.data,
+        pagamentos: [],
+        saldo: item.valor,
+      });
+    }
+  });
+
+  // ordenar dívidas por data (mais antiga)
+  grupos.sort((a, b) => new Date(a.data) - new Date(b.data));
+
+  // aplicar pagamentos FIFO
+  listaDados.forEach((item) => {
+    if (item.tipo === "pagamento") {
+      let restante = item.valor;
+
+      for (let grupo of grupos) {
+        if (restante <= 0) break;
+
+        if (Math.abs(grupo.saldo) > 0.01) {
+          let aplicado = Math.min(grupo.saldo, restante);
+
+          grupo.pagamentos.push({
+            valor: aplicado,
+            data: item.data,
+            metodo: item.metodo,
+          });
+
+          grupo.saldo -= aplicado;
+          restante -= aplicado;
+        }
+      }
+    }
+  });
+
+  // inverter ordem para exibir recente primeiro
+  grupos.reverse();
+
+  // renderizar
+  grupos.forEach((grupo) => {
+    // CARD PRINCIPAL
+    const card = document.createElement("div");
+    card.classList.add("card");
+
+    const titulo = document.createElement("div");
+    titulo.style.fontWeight = "bold";
+    titulo.style.marginBottom = "8px";
+
+    if (grupo.saldo <= 0) {
+      card.classList.add("quitada");
+      titulo.innerText = `🧾 Dívida - R$ ${grupo.valor} - ${grupo.data} → ✅ Quitada`;
     } else {
-      li.innerText = `💸 Pagamento - R$ ${item.valor} (${item.metodo}) - ${item.data}`;
+      card.classList.add("ativa");
+      titulo.innerText = `🧾 Dívida - R$ ${grupo.valor} - ${grupo.data} → 🔴 Deve: R$ ${grupo.saldo}`;
     }
 
-    lista.appendChild(li);
-  }
+    card.appendChild(titulo);
+
+    // LINHAS DE PAGAMENTO
+    grupo.pagamentos.forEach((p) => {
+      const pEl = document.createElement("div");
+      pEl.classList.add("pagamento");
+
+      pEl.innerText = `💸 Pago: R$ ${p.valor} (${p.metodo}) - ${p.data}`;
+
+      card.appendChild(pEl);
+    });
+
+    lista.appendChild(card);
+  });
 }
 
 carregarExtrato();
